@@ -8,7 +8,8 @@ class ViewGuidelinesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Guidelines'),
+        backgroundColor: Colors.deepPurpleAccent,
+        title: const Text('Guidelines', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),),
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('Guidelines').snapshots(),
