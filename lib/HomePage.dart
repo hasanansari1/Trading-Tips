@@ -1,4 +1,3 @@
-
 // ignore_for_file: file_names
 
 import 'package:equitystaruser/Guidelines/FreeGuidelinesScreen.dart';
@@ -10,8 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'AuthView/LoginPage.dart';
+import 'Notifications/notification_screen.dart';
 import 'Provider.dart';
 import 'ShareScreen.dart';
 
@@ -23,27 +22,46 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<bool> _onWillPop() async {
     return (await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Are you sure?'),
-        content: const Text('Do you want to exit the app?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('No'),
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text(
+              'Exit Equity Star?',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            content: const Text(
+              'Do you want to exit Equity Star?',
+              style: TextStyle(
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text(
+                  'No',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text(
+                  'Yes',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
+                ),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Yes'),
-          ),
-        ],
-      ),
-    )) ??
+        )) ??
         false;
   }
 
@@ -68,125 +86,153 @@ class _HomePageState extends State<HomePage> {
           ),
           centerTitle: true,
         ),
-          drawer: SizedBox(
-            width: 250,
-            child: Drawer(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: <Widget>[
-                  const DrawerHeader(
-                    decoration: BoxDecoration(color: Colors.deepPurpleAccent),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 40,
-                          backgroundImage: AssetImage('assets/images/HomePageLogo.png'),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "Profile",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25,
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.bold,
+        drawer: Drawer(
+          width: 230,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              const DrawerHeader(
+                decoration: BoxDecoration(color: Colors.deepPurpleAccent),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 40,
+                      backgroundImage:
+                          AssetImage('assets/images/HomePageLogo.png'),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      "Profile",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Card(
+                child: ListTile(
+                  title: const Text('Home', style: TextStyle(fontSize: 20)),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              Card(
+                child: ListTile(
+                  title:
+                      const Text("Intraday", style: TextStyle(fontSize: 20)),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const IntraDayScreen()));
+                  },
+                ),
+              ),
+              Card(
+                child: ListTile(
+                  title: const Text("Short Term",
+                      style: TextStyle(fontSize: 20)),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ShortTermScreen()));
+                  },
+                ),
+              ),
+              Card(
+                child: ListTile(
+                  title:
+                      const Text("Long Term", style: TextStyle(fontSize: 20)),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LongTermScreen()));
+                  },
+                ),
+              ),
+              Card(
+                child: ListTile(
+                  title: const Text("IPO", style: TextStyle(fontSize: 20)),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const IPOScreen()));
+                  },
+                ),
+              ),
+              Card(
+                child: ListTile(
+                  title: const Text("Theme", style: TextStyle(fontSize: 20)),
+                  onTap: () {
+                    Provider.of<ThemeProvider>(context, listen: false)
+                        .toggleTheme();
+                  },
+                ),
+              ),
+
+              Card(
+                child: ListTile(
+                  title: const Text("Notification", style: TextStyle(fontSize: 20)),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Notifications(id: '')));
+                  },
+                ),
+              ),
+              Card(
+                child: ListTile(
+                  title: const Text("Logout", style: TextStyle(fontSize: 20)),
+                  onTap: () {
+                    FirebaseAuth.instance.signOut();
+                    {
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      title: const Text('Home', style: TextStyle(fontSize: 20)),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      title: const Text("Intraday", style: TextStyle(fontSize: 20)),
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> const IntraDayScreen()));
-                      },
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      title: const Text("Short Term", style: TextStyle(fontSize: 20)),
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> const ShortTermScreen()));
-                      },
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      title: const Text("Long Term", style: TextStyle(fontSize: 20)),
-                      onTap: ()
-                      {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> const LongTermScreen()));
-                      },
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      title: const Text("IPO", style: TextStyle(fontSize: 20)),
-                      onTap: ()
-                      {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> const IPOScreen()));
-                      },
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      title: const Text("Theme", style: TextStyle(fontSize: 20)),
-                      onTap: ()
-                      {
-                        Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
-
-                      },
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      title: const Text("Logout", style: TextStyle(fontSize: 20)),
-                      onTap: ()
-                      {
-                        FirebaseAuth.instance.signOut();
-                        {
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                builder: (context) => const LoginPage(),
-                              ),
-                                  (route) => false);
-                        }
-                      },
-                    ),
-                  ),
-                ],
+                          (route) => false);
+                    }
+                  },
+                ),
               ),
-            ),
+            ],
           ),
-
-          body: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-               Center(
-                child: Image.asset("assets/images/HomePageLogo.png", height: 100, width: 100,),
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: GridView.count(
+        ),
+        body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Image.asset(
+                    "assets/images/HomePageLogo.png",
+                    height: 100,
+                    width: 100,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                GridView.count(
+                  physics:
+                      const NeverScrollableScrollPhysics(), // Disable scrolling for GridView
+                  shrinkWrap: true,
                   crossAxisCount: 2,
                   childAspectRatio: 1.0,
                   mainAxisSpacing: 20.0,
                   crossAxisSpacing: 20.0,
                   children: List.generate(6, (index) {
-
                     List<Map<String, dynamic>> cardData = [
                       {
                         "image": "assets/images/Intraday.png",
@@ -237,18 +283,18 @@ class _HomePageState extends State<HomePage> {
                               style: const TextStyle(
                                 fontSize: 17.0,
                                 color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontStyle: FontStyle.italic
                               ),
                             ),
-
                           ],
                         ),
                       ),
                     );
-                  }
-                  ),
+                  }),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

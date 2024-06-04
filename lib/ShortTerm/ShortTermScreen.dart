@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import '../HomePage.dart';
 import 'ShortTermModel.dart';
 
-
 class ShortTermScreen extends StatefulWidget {
   const ShortTermScreen({Key? key}) : super(key: key);
 
@@ -18,7 +17,6 @@ class _ShortTermScreenState extends State<ShortTermScreen> {
   final List<String> dropdownItems = ['All', 'Achieved', 'Active', 'SL Hit'];
   String? _selectedDropdownItem;
   String? _searchQuery;
-
 
   @override
   Widget build(BuildContext context) {
@@ -91,12 +89,12 @@ class _ShortTermScreenState extends State<ShortTermScreen> {
                       },
                       items: dropdownItems
                           .map((item) => DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(
-                          item,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ))
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ))
                           .toList(),
                       hint: const Text('All', style: TextStyle(fontSize: 16)),
                     ),
@@ -114,21 +112,30 @@ class _ShortTermScreenState extends State<ShortTermScreen> {
                   Expanded(
                     child: Text(
                       "Stock",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                          color: Colors.white),
                       textAlign: TextAlign.center,
                     ),
                   ),
                   Expanded(
                     child: Text(
                       "Target",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                          color: Colors.white),
                       textAlign: TextAlign.center,
                     ),
                   ),
                   Expanded(
                     child: Text(
                       "SL",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                          color: Colors.white),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -137,7 +144,10 @@ class _ShortTermScreenState extends State<ShortTermScreen> {
                       children: [
                         Text(
                           "Remarks",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
+                              color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -148,7 +158,9 @@ class _ShortTermScreenState extends State<ShortTermScreen> {
             ),
             const SizedBox(height: 8.0),
             Expanded(
-              child: ShortTermList(searchQuery: _searchQuery,statusFilter: _selectedDropdownItem),
+              child: ShortTermList(
+                  searchQuery: _searchQuery,
+                  statusFilter: _selectedDropdownItem),
             ),
           ],
         ),
@@ -161,12 +173,12 @@ class _ShortTermScreenState extends State<ShortTermScreen> {
 
 // IntraDayList.dart
 
-
 class ShortTermList extends StatelessWidget {
   final String? searchQuery;
   final String? statusFilter;
 
-  const ShortTermList({Key? key, this.searchQuery, this.statusFilter}) : super(key: key);
+  const ShortTermList({Key? key, this.searchQuery, this.statusFilter})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +186,8 @@ class ShortTermList extends StatelessWidget {
         .collection('Stocks')
         .where('category', isEqualTo: 'ShortTerm')
         .where('stockName', isGreaterThanOrEqualTo: searchQuery ?? '')
-        .where('stockName', isLessThan: searchQuery != null ? '${searchQuery!}z' : 'z');
+        .where('stockName',
+            isLessThan: searchQuery != null ? '${searchQuery!}z' : 'z');
 
     // Apply status filter if selected
     if (statusFilter != null && statusFilter != 'All') {
@@ -189,18 +202,23 @@ class ShortTermList extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator(color: Colors.deepPurpleAccent));
+          return const Center(
+              child: CircularProgressIndicator(color: Colors.deepPurpleAccent));
         }
 
-        final data = snapshot.data?.docs.map((doc) => ShortTermModel.fromSnapshot(doc)).toList();
+        final data = snapshot.data?.docs
+            .map((doc) => ShortTermModel.fromSnapshot(doc))
+            .toList();
 
         return ListView.separated(
+          physics: const BouncingScrollPhysics(),
           shrinkWrap: true,
           itemCount: data!.length,
           separatorBuilder: (context, index) => const Divider(),
           itemBuilder: (context, index) {
             final item = data[index];
-            final formattedDate = DateFormat('dd/MM/yyyy').format(item.date.toDate());
+            final formattedDate =
+                DateFormat('dd/MM/yyyy').format(item.date.toDate());
 
             var statusColor = item.status == 'SL Hit' ? Colors.red : null;
             var slColor = item.status == 'SL Hit' ? Colors.red : null;
@@ -221,13 +239,17 @@ class ShortTermList extends StatelessWidget {
                         style: const TextStyle(fontSize: 14),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 3,),
+                      const SizedBox(
+                        height: 3,
+                      ),
                       Text(
                         'CMP: ${item.cmp}',
                         style: const TextStyle(fontSize: 14),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 3,),
+                      const SizedBox(
+                        height: 3,
+                      ),
                       Text(
                         formattedDate,
                         style: const TextStyle(fontSize: 14),

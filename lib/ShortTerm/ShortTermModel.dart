@@ -36,8 +36,9 @@ class ShortTermModel {
       sl: snapshot['sl'],
       remark: snapshot['remark'],
       date: snapshot['date'] is Timestamp
-          ? snapshot['date']  // If already a Timestamp, use it
-          : Timestamp.fromDate(DateTime.parse(snapshot['date'])), // Convert from String to DateTime
+          ? snapshot['date'] // If already a Timestamp, use it
+          : Timestamp.fromDate(DateTime.parse(
+              snapshot['date'])), // Convert from String to DateTime
     );
   }
 }

@@ -16,7 +16,6 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passController = TextEditingController();
   var password = true;
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +23,6 @@ class _LoginPageState extends State<LoginPage> {
         key: Form_key,
         child: SingleChildScrollView(
           child: Container(
-
             margin: const EdgeInsets.only(top: 100, left: 20, right: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,20 +98,23 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () async {
                         if (Form_key.currentState!.validate()) {
                           try {
-                            await FirebaseAuth.instance.signInWithEmailAndPassword(
+                            await FirebaseAuth.instance
+                                .signInWithEmailAndPassword(
                               email: emailController.text,
                               password: passController.text,
                             );
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (context) => const HomePage()),
+                              MaterialPageRoute(
+                                  builder: (context) => const HomePage()),
                             );
                             setState(() {
                               emailController.clear();
                               passController.clear();
                             });
                           } on FirebaseAuthException catch (e) {
-                            if (e.code == "user-not-found" || e.code == "wrong-password") {
+                            if (e.code == "user-not-found" ||
+                                e.code == "wrong-password") {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text("Invalid email or password"),
@@ -133,7 +134,8 @@ class _LoginPageState extends State<LoginPage> {
                       child: const Padding(
                         padding: EdgeInsets.only(right: 10),
                         child: Center(
-                          child: Icon(Icons.arrow_forward_outlined, color: Colors.black),
+                          child: Icon(Icons.arrow_forward_outlined,
+                              color: Colors.black),
                         ),
                       ),
                     ),
@@ -146,9 +148,13 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(width: 10),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SignUpPage()));
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignUpPage()));
                       },
-                      child: const Text("Sign Up", style: TextStyle(color: Colors.blueGrey)),
+                      child: const Text("Sign Up",
+                          style: TextStyle(color: Colors.blueGrey)),
                     ),
                   ],
                 ),

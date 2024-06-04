@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../HomePage.dart';
 import 'IPOModel.dart';
 
 class IPOScreen extends StatefulWidget {
@@ -28,11 +27,10 @@ class _IPOScreenState extends State<IPOScreen> {
   Future<void> fetchIPOs() async {
     try {
       QuerySnapshot querySnapshot =
-      await FirebaseFirestore.instance.collection('IPO').get();
+          await FirebaseFirestore.instance.collection('IPO').get();
 
-      ipoList = querySnapshot.docs
-          .map((doc) => IPOModel.fromSnapshot(doc))
-          .toList();
+      ipoList =
+          querySnapshot.docs.map((doc) => IPOModel.fromSnapshot(doc)).toList();
       filteredIpoList = ipoList;
       setState(() {});
     } catch (e) {
@@ -44,12 +42,13 @@ class _IPOScreenState extends State<IPOScreen> {
     setState(() {
       filteredIpoList = ipoList
           ?.where((ipo) =>
-      ipo.stockName.toLowerCase().contains(query.toLowerCase()) &&
-          (isAllSelected || (isCurrentSelected && ipo.status == 'Current') || (isUpcomingSelected && ipo.status == 'Upcoming')))
+              ipo.stockName.toLowerCase().contains(query.toLowerCase()) &&
+              (isAllSelected ||
+                  (isCurrentSelected && ipo.status == 'Current') ||
+                  (isUpcomingSelected && ipo.status == 'Upcoming')))
           .toList();
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -85,72 +84,74 @@ class _IPOScreenState extends State<IPOScreen> {
         ),
       ),
       body: ipoList == null
-          ? const Center(child: const CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              child: TextFormField(
-                style: const TextStyle(fontSize: 16),
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.all(16),
-                  prefixIcon: const Icon(Icons.search_outlined),
-                  labelText: 'Search by IPO ...',
-                  labelStyle: const TextStyle(fontSize: 18),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
+                    child: TextFormField(
+                      style: const TextStyle(fontSize: 16),
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(16),
+                        prefixIcon: const Icon(Icons.search_outlined),
+                        labelText: 'Search by IPO ...',
+                        labelStyle: const TextStyle(fontSize: 18),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onChanged: searchIPOs,
+                    ),
                   ),
-                ),
-                onChanged: searchIPOs,
-              ),
-            ),
-
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildFilterContainer(
-                    'All', isAllSelected, () => _handleFilterSelection('All')),
-                _buildFilterContainer(
-                    'Current', isCurrentSelected, () => _handleFilterSelection('Current')),
-                _buildFilterContainer(
-                    'Upcoming', isUpcomingSelected, () => _handleFilterSelection('Upcoming')),
-              ],
-            ),
-
-            const SizedBox(height: 10,),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                headingRowHeight: 60,
-                dataRowMaxHeight: 62,
-                horizontalMargin: 8,
-                columnSpacing: 0,
-                columns: [
-                  _buildDataColumn('Name', 210),
-                  _buildDataColumn('Lot', 80),
-                  _buildDataColumn('Price', 100),
-                  _buildDataColumn('OpenOn', 120),
-                  _buildDataColumn('CloseOn', 120),
-                  _buildDataColumn('Remarks', 150),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildFilterContainer('All', isAllSelected,
+                          () => _handleFilterSelection('All')),
+                      _buildFilterContainer('Current', isCurrentSelected,
+                          () => _handleFilterSelection('Current')),
+                      _buildFilterContainer('Upcoming', isUpcomingSelected,
+                          () => _handleFilterSelection('Upcoming')),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      headingRowHeight: 60,
+                      dataRowMaxHeight: 62,
+                      horizontalMargin: 8,
+                      columnSpacing: 0,
+                      columns: [
+                        _buildDataColumn('Name', 210),
+                        _buildDataColumn('Lot', 80),
+                        _buildDataColumn('Price', 100),
+                        _buildDataColumn('OpenOn', 120),
+                        _buildDataColumn('CloseOn', 120),
+                        _buildDataColumn('Remarks', 150),
+                      ],
+                      rows: filteredIpoList
+                              ?.map((ipo) => _buildDataRow(ipo))
+                              .toList() ??
+                          [],
+                    ),
+                  ),
                 ],
-                rows: filteredIpoList
-                    ?.map((ipo) => _buildDataRow(ipo))
-                    .toList() ??
-                    [],
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 
   DataColumn _buildDataColumn(String label, double width) {
     return DataColumn(
+      //using container
       label: Container(
         width: width,
         padding: const EdgeInsets.all(12),
@@ -160,6 +161,7 @@ class _IPOScreenState extends State<IPOScreen> {
             color: Colors.deepPurpleAccent,
           ),
         ),
+        // Text k baare m sab aagya isme
         child: Text(
           label,
           style: const TextStyle(
@@ -212,7 +214,6 @@ class _IPOScreenState extends State<IPOScreen> {
     );
   }
 
-
   Widget _buildFilterContainer(
       String text, bool isSelected, VoidCallback onTap) {
     return GestureDetector(
@@ -254,10 +255,12 @@ class _IPOScreenState extends State<IPOScreen> {
         filteredIpoList = ipoList;
       } else if (filter == 'Current') {
         isCurrentSelected = true;
-        filteredIpoList = ipoList?.where((ipo) => ipo.status == 'Current').toList();
+        filteredIpoList =
+            ipoList?.where((ipo) => ipo.status == 'Current').toList();
       } else if (filter == 'Upcoming') {
         isUpcomingSelected = true;
-        filteredIpoList = ipoList?.where((ipo) => ipo.status == 'Upcoming').toList();
+        filteredIpoList =
+            ipoList?.where((ipo) => ipo.status == 'Upcoming').toList();
       }
     });
   }

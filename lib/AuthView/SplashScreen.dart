@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import '../HomePage.dart';
 import 'LoginPage.dart';
 
-
 User? user = FirebaseAuth.instance.currentUser;
 
 class SplashScreen extends StatefulWidget {
-
   const SplashScreen({super.key});
 
   @override
@@ -23,7 +21,6 @@ class SplashScreenState extends State<SplashScreen> {
   }
 
   void checkingTheSavedData() async {
-
     // print("user.....${user}");
     if (user == null) {
       // print("object........$user");
@@ -61,11 +58,17 @@ class SplashScreenState extends State<SplashScreen> {
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                  Text(
+                Text(
                   'Welcome to Equity',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
-                Icon(Icons.star, color: Colors.yellow,),
+                Icon(
+                  Icons.star,
+                  color: Colors.yellow,
+                ),
               ],
             ),
             const SizedBox(height: 10),
@@ -74,7 +77,8 @@ class SplashScreenState extends State<SplashScreen> {
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             const SizedBox(height: 20),
-            const CircularProgressIndicator( // Add a loading indicator
+            const CircularProgressIndicator(
+              // Add a loading indicator
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
           ],

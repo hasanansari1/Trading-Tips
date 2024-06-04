@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'LoginPage.dart';
 
-
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
@@ -12,7 +11,6 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-
   final formKey = GlobalKey<FormState>();
   var password = false, conPassword = true;
   bool passwordVisible = false;
@@ -24,8 +22,7 @@ class _SignUpPageState extends State<SignUpPage> {
   bool isLoading = false;
   String uniquefilename = DateTime.now().millisecondsSinceEpoch.toString();
 
-  Future<bool>doesRegisterExist(String email) async{
-
+  Future<bool> doesRegisterExist(String email) async {
     final querySnapshot = await FirebaseFirestore.instance
         .collection("User")
         .where("email", isEqualTo: email)
@@ -33,7 +30,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
     return querySnapshot.docs.isNotEmpty;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +45,10 @@ class _SignUpPageState extends State<SignUpPage> {
               children: [
                 const Text(
                   "Welcome to Equity Star",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
+                  style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic),
                 ),
                 const Text(
                   "Let's Register in Equity Star",
@@ -128,7 +127,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                 ),
-
                 Container(
                   margin: const EdgeInsets.only(top: 30),
                   child: TextFormField(
@@ -150,7 +148,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                 ),
-
                 Container(
                   alignment: Alignment.bottomRight,
                   padding: const EdgeInsets.all(20),
@@ -163,19 +160,21 @@ class _SignUpPageState extends State<SignUpPage> {
                           try {
                             await FirebaseAuth.instance
                                 .createUserWithEmailAndPassword(
-                              email: emailController.text, password: passController.text,)
+                              email: emailController.text,
+                              password: passController.text,
+                            )
                                 .then((value) {
-                              FirebaseFirestore.instance.collection(
-                                  "User").doc(value.user!.uid).set(
-
-                                  {
-                                    "Name": nameController.text,
-                                    "Email": emailController.text,
-                                    "Password": passController.text,
-                                    "Mobile": mobileController.text,
-                                    "UID": FirebaseAuth.instance.currentUser!.uid,
-                                    "DocumentID": value.user!.uid,
-                                  });
+                              FirebaseFirestore.instance
+                                  .collection("User")
+                                  .doc(value.user!.uid)
+                                  .set({
+                                "Name": nameController.text,
+                                "Email": emailController.text,
+                                "Password": passController.text,
+                                "Mobile": mobileController.text,
+                                "UID": FirebaseAuth.instance.currentUser!.uid,
+                                "DocumentID": value.user!.uid,
+                              });
                             });
                             setState(() {
                               nameController.clear();
@@ -183,23 +182,20 @@ class _SignUpPageState extends State<SignUpPage> {
                               passController.clear();
                               mobileController.clear();
                             });
-                            ScaffoldMessenger.of(context).showSnackBar
-                              (const SnackBar(
-                                content: Text("Register Successfull")));
-                          }
-                          on FirebaseAuthException catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text("Register Successfull")));
+                          } on FirebaseAuthException catch (e) {
                             if (e.code == 'weak-password') {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Password is too weak"),
-                                  ));
-                            }
-                            else if (e.code == 'email-already-in-use') {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                        "Email is already Registered"),
-                                  ));
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("Password is too weak"),
+                              ));
+                            } else if (e.code == 'email-already-in-use') {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("Email is already Registered"),
+                              ));
                             }
                           }
                         }
@@ -212,7 +208,8 @@ class _SignUpPageState extends State<SignUpPage> {
                           borderRadius: BorderRadius.circular(70),
                         ),
                       ),
-                      child: const Icon(Icons.arrow_forward_rounded, color: Colors.black),
+                      child: const Icon(Icons.arrow_forward_rounded,
+                          color: Colors.black),
                     ),
                   ),
                 ),
@@ -223,9 +220,13 @@ class _SignUpPageState extends State<SignUpPage> {
                     const SizedBox(width: 10),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()));
                       },
-                      child: const Text("Login!", style: TextStyle(color: Colors.lightGreen)),
+                      child: const Text("Login!",
+                          style: TextStyle(color: Colors.lightGreen)),
                     ),
                   ],
                 ),
